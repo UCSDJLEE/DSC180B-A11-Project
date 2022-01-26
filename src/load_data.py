@@ -2,7 +2,6 @@ import os
 import uproot
 import numpy as np
 import pandas as pd 
-import dask.dataframe as dd
 
 # Temporary script for EDA portion of DSC180B project
 # Author: Jayden Lee
@@ -68,7 +67,7 @@ BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{}_TuneCP5_13TeV-madgraph_pythi
     return lst
 
 # Consider putting this in separate script as "PREPARE DATA FOR EDA PART1"
-def load_data(fps:list) -> dask.dataframe:
+def load_data(fps:list) -> pd.DataFrame:
 	'''
 	This function takes filepaths to multiple .root files, access into them
 	and return all data in dask dataframe, which is simply a collection of Pandas dataframes

@@ -34,13 +34,12 @@ def path_generator(t:str, eda=True) -> list:
 	qcd = 'QCD'
 	signal = 'SIGNAL'
 	lst = []
-	hidden_file = '.nano_mc2017_174_Skim.root.ViGCYO'
 
 	if eda:
 		if upper(t) == qcd:
 	        main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/\
 	        QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
-			num_data = 10
+			num_data = 11
 	        
 	        bounds = [
 	            [1000,1500],
@@ -53,14 +52,12 @@ def path_generator(t:str, eda=True) -> list:
 	        for bound in bounds:
 	            low, high = bound
 	            fp = main.format(low=low, high=high)
-	            all_files = os.listdir(fp)
-	            samples = random.sample(all_files, k=num_data)
+	            temp = os.listdir(fp)
 
-	            # Edge case -- there exists one hidden file under 700-1000 bound directory
-	            # If that file gets sampled, re-sample until that file is not sampled
-	            while hidden_file in samples:
-	            	samples = random.sample(all_files, k=num_data)
-	            
+	            # There exists couple hidden .root files under these directories
+	            # They are inaccessible, so exclude them from list of files to sample from
+	            all_files = [file for file in temp if not file.startswith('.')]
+	            samples = random.sample(all_files, k=num_data)
 	            files = [os.path.join(fp, sample) for sample in samples]
 	            lst += files
 

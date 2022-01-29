@@ -36,7 +36,7 @@ def path_generator(t:str, eda=True) -> list:
     lst = []
 
     if eda:
-        if upper(t) == qcd:
+        if t.upper() == qcd:
             main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/\
 QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
             num_data = 11
@@ -61,7 +61,7 @@ QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
                 files = [os.path.join(fp, sample) for sample in samples]
                 lst += files
 
-        elif upper(t) == signal:
+        elif t.upper() == signal:
             main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/\
 BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{}_TuneCP5_13TeV-madgraph_pythia8/'
             num_data = 4

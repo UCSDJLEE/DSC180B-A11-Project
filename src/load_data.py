@@ -7,7 +7,7 @@ import random
 # Data loader script for EDA portion of DSC180B project
 # Author: Jayden Lee
 
-#------------------------------------------------------------------------
+#------------------------------------------------------------------------ral
 
 # In our case, our dataset is splitted into two parts based on 
 # the type of jet: QCD and Hbb(and other type of Higgs jets)
@@ -38,7 +38,7 @@ def path_generator(t:str, eda=True) -> list:
 	if eda:
 		if upper(t) == qcd:
 	        main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/\
-	        QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
+QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
 			num_data = 11
 	        
 	        bounds = [
@@ -63,7 +63,7 @@ def path_generator(t:str, eda=True) -> list:
 
 	    elif upper(t) == signal:
 	        main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/\
-	        BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{}_TuneCP5_13TeV-madgraph_pythia8/'
+BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{}_TuneCP5_13TeV-madgraph_pythia8/'
 	        num_data = 4
 	            
 	        parts = [1,2]

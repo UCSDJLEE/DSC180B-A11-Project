@@ -37,8 +37,7 @@ def path_generator(t:str, eda=True) -> list:
 
     if eda:
         if t.upper() == qcd:
-            main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/\
-QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
+            main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
             num_data = 11
             
             bounds = [
@@ -62,8 +61,7 @@ QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
                 lst += files
 
         elif t.upper() == signal:
-            main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/\
-BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{}_TuneCP5_13TeV-madgraph_pythia8/'
+            main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{}_TuneCP5_13TeV-madgraph_pythia8/'
             num_data = 4
                 
             parts = [1,2]
@@ -76,12 +74,38 @@ BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{}_TuneCP5_13TeV-madgraph_pythi
                 files = [os.path.join(fp, sample) for sample in samples]
                 lst += files
 
-   #  else:
-   #    if upper(t) == qcd:
-   #        main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/\
-      #       QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
-            # num_data = 10
+    # We will use all available training data for training our model
+    else:
+        if t.upper() == qcd:
+            main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
+            bounds = [
+                [1000,1500],
+                [1500,2000],
+                [2000, 'Inf'],
+                [500,700],
+                [700,1000]
+            ]
 
+            for bound in bounds:
+                low, high = bound
+                fp = main.format(low=low, high=high)
+                temp = os.listdir(fp)
+
+                files = [os.path.join(fp,file) for file in temp]
+                lst += files
+
+        elif t.upper() == signal:
+            main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{}_TuneCP5_13TeV-madgraph_pythia8/'
+
+            parts = [1,2]
+
+            for part in parts:
+                fp = main.format(part)
+                temp = os.listdir(fp)
+
+                files = [os.path.join(fp,file) for file in temp]
+                lst += files
+        
     return lst
 
 

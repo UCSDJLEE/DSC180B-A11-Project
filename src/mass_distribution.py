@@ -14,6 +14,11 @@ def mass_distribution(df):
     '''
     MASS = 'fj_genjetmsd'
 
+    # Summary stat table
+    summary = df.groupby('Type').aggregate(Avg_jetmass=(MASS, 'mean'), Med_jetmass=(MASS, 'median'))
+    avg_mass_signal = summary.loc['Signal', 'Avg_jetmass']
+    avg_mass_qcd = summary.loc['QCD', 'Avg_jetmass']
+
     # Text description to display on visualization
     text = f'Average mass of Signal jets: {avg_mass_signal:.5}\n\
 Average mass of QCD jets: {avg_mass_qcd:.5}'
@@ -32,8 +37,5 @@ Average mass of QCD jets: {avg_mass_qcd:.5}'
     _ = ax.set_ylabel('Counts')
     _ = ax.spines['right'].set_visible(False)
     _ = ax.spines['top'].set_visible(False)
-
-    # Summary table
-    summary = df.groupby('Type').aggregate(Avg_jetmass=(MASS, 'mean'), Med_jetmass=(MASS, 'median'))
 
     return ax, summary

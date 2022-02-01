@@ -13,9 +13,9 @@ def sv_mass_distribution(df):
     Parameters:
     df -- (n x 2) dataframe; number of secondary vertices(# of SVs recorded) and jet mass(generator-level soft drop mass) must be present
     '''
-    assert df.columns == ['# of SVs recorded', 'generator-level soft drop mass']
+    assert list(df.columns) == ['# of SVs recorded', 'generator-level soft drop mass']
     XAXIS = 'Number of secondary vertices recorded'
-    TITLE = 'Distribution of jet mass per jet\nwith different number of recorded SVs'
+    TITLE = 'Distribution of jet mass per jet\nwith different number of recorded SVs in a jet'
     YAXIS = 'Generator-level soft drop mass'
     font_style = {
         'size':20,

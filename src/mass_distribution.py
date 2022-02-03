@@ -34,7 +34,7 @@ Average mass of QCD jets: {avg_mass_qcd:.5}'
     _ = ax.set_xlabel('Generator-level soft drop mass')
     _ = ax.text(550, 300000, text)
     _ = ax.set_xticks(range(0, 1250, 125))
-    _ = ax.set_ylabel('Counts')
+    _ = ax.set_ylabel('Count of jets')
     _ = ax.spines['right'].set_visible(False)
     _ = ax.spines['top'].set_visible(False)
 

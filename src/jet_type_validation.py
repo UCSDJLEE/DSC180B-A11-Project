@@ -1,7 +1,7 @@
 import pandas as pd 
 import numpy as np
 
-def jet_mass_validation(df:pd.DataFrame, jet_type:str):
+def jet_type_validation(df:pd.DataFrame, jet_type:str):
     '''
     This function validates if all jets in the input dataset 
     belong to one and only one jet type.
@@ -28,9 +28,9 @@ def jet_mass_validation(df:pd.DataFrame, jet_type:str):
         df_labels = df[qcd_labels]
 
         # Below print statement must be True if all jets belong to one type
-        print(f'Each jet corresponds to exactly one type: {len(df_qcd_labels.sum(axis=1).unique()) == 1}')
+        print(f'Each jet corresponds to exactly one type: {len(df_labels.sum(axis=1).unique()) == 1}')
 
-        counts = (df_qcd_labels.sum(axis=0)
+        counts = (df_labels.sum(axis=0)
             .sort_values(ascending=False)
             .to_frame(name='Count'))
 
@@ -48,23 +48,23 @@ def jet_mass_validation(df:pd.DataFrame, jet_type:str):
         # since these three types of Higgs jets 
         # are the most common elementary particles
         # Higgs bosons decay into
-        df_signal_labels = df_signal_labels[
-            (df_signal_labels['fj_H_bb'] == 1) |
-            (df_signal_labels['fj_H_cc'] == 1) |
-            (df_signal_labels['fj_H_qq'] == 1)
+        df_labels = df_labels[
+            (df_labels['fj_H_bb'] == 1) |
+            (df_labels['fj_H_cc'] == 1) |
+            (df_labels['fj_H_qq'] == 1)
         ]
 
         # Drop observations that are associated to more than single type
-        df_signal_labels['temp'] = df_signal_labels['fj_H_bb'] + df_signal_labels['fj_H_cc'] + df_signal_labels['fj_H_qq']
-        print(f'Before filtering: {df_signal_labels.shape[0]} rows', '\n')
+        df_labels['temp'] = df_labels['fj_H_bb'] + df_labels['fj_H_cc'] + df_labels['fj_H_qq']
+        print(f'After dropping uninterested jet types: {df_labels.shape[0]} rows', '\n')
 
-        df_signal_labels = df_signal_labels[df_signal_labels['temp'] == 1].drop(columns='temp')
-        print(f'After filtering: {df_signal_labels.shape[0]} rows', '\n')
+        df_labels = df_labels[df_labels['temp'] == 1].drop(columns='temp')
+        print(f'After dropping jets with more than one type associated: {df_labels.shape[0]} rows', '\n')
 
         # Below print statement must be True if all jets belong to one type
-        print(f'Each jet corresponds to exactly one type: {len(df_signal_labels.sum(axis=1).unique()) == 1}')
+        print(f'Each jet corresponds to exactly one type: {len(df_labels.sum(axis=1).unique()) == 1}')
 
-        counts = (df_signal_labels.sum(axis=0)
+        counts = (df_labels.sum(axis=0)
             .sort_values(ascending=False)
             .to_frame(name='Count'))
 

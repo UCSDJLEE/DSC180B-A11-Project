@@ -137,12 +137,14 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             else:
                 valid_pred_loss = batch_vloss
                 
-            print(f'At epoch {epoch}, training loss: {batch_loss} and validation loss: {batch_vloss}')
+            print(f'At epoch {epoch}, training loss: {training_batch_loss} and validation loss: {batch_vloss}')
 
         training_rmse = [np.sqrt(tloss) for tloss in training_lst]
         validation_rmse = [np.sqrt(vloss) for vloss in valid_lst]
 
-        # Refresh all .pt files
+        # Refresh all .pt files by deleting `processed` dir
+        # os.rmdir('./processed');
+
         return training_rmse, validation_rmse
 
 if __name__ == '__main__':

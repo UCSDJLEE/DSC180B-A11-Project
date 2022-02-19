@@ -85,11 +85,6 @@ class GraphDataset(Dataset):
 
             n_samples = label_array_all[self.labels[0]].shape[0]
             y = np.zeros((n_samples, 1))
-#             y[:, 0] = label_array_all['sample_isQCD'] * (label_array_all['label_QCD_b'] +
-#                                                          label_array_all['label_QCD_bb'] +
-#                                                          label_array_all['label_QCD_c'] +
-#                                                          label_array_all['label_QCD_cc'] +
-#                                                          label_array_all['label_QCD_others'])
             y[:, 0] = label_array_all['fj_genjetmsd']
 
             z = np.stack([spec_array[spec] for spec in self.spectators], axis=1)
@@ -106,7 +101,6 @@ class GraphDataset(Dataset):
                 pairs = np.stack([[m, n] for (m, n) in itertools.product(range(n_particles), range(n_particles)) if m != n])
                 edge_index = torch.tensor(pairs, dtype=torch.long)
                 edge_index = edge_index.t().contiguous()
-#                 print(feature_array['sv_pt_log'][i].to_numpy())
                 x = []
                 for feat in self.features:
                     if feat.startswith('pf'):
@@ -118,7 +112,6 @@ class GraphDataset(Dataset):
                         padded100 = np.pad(t, (0,93), constant_values=0)
                         x.append(padded100)
                 x = torch.tensor(x, dtype=torch.float).T
-#                 x = torch.tensor([feature_array[feat][i].to_numpy() for feat in self.features], dtype=torch.float).T
                 u = torch.tensor(z[i], dtype=torch.float)
                 data = Data(x=x, edge_index=edge_index, y=torch.tensor(y[i:i+1], dtype=torch.long))
                 data.u = torch.unsqueeze(u, 0)
@@ -136,25 +129,3 @@ class GraphDataset(Dataset):
         p = osp.join(self.processed_dir, self.processed_file_names[idx])
         data = torch.load(p)
         return data
-
-
-if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=str, help="dataset path", required=True)
-    parser.add_argument("--n-events", type=int, default=-1, help="number of events (-1 means all)")
-    parser.add_argument("--n-events-merge", type=int, default=1000, help="number of events to merge")
-    args = parser.parse_args()
-
-    with open('/home/dmngo/test-train-hep/src/reg_defs.yml') as file:
-        # The FullLoader parameter handles the conversion from YAML
-        # scalar values to Python the dictionary format
-        definitions = yaml.load(file, Loader=yaml.FullLoader)
-
-    features = definitions['features']
-    spectators = definitions['spectators']
-    labels = definitions['labels']
-
-    gdata = GraphDataset(args.dataset, features, labels, spectators,
-                         n_events=args.n_events,
-                         n_events_merge=args.n_events_merge)

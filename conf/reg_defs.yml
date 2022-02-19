@@ -1,0 +1,106 @@
+# 19 jet level features,
+features: 
+#  - fj_idx
+#  - fj_pt
+#  - fj_eta
+#  - fj_phi
+#  - fj_lsf3
+#  - fj_deepTagMD_H4qvsQCD
+#  - fj_deepTag_HvsQCD
+#  - fj_PN_H4qvsQCD
+#  - fj_PN_XbbvsQCD
+#  - fj_nProngs
+#  - fj_genRes_pt
+#  - fj_dR_W
+#  - fj_genW_pt
+#  - fj_genW_eta
+#  - fj_genW_phi
+#  - fj_genW_mass
+#  - fj_dR_Wstar
+#  - fj_genWstar_pt
+#  - fj_genWstar_eta
+#  - fj_genWstar_phi
+#  - fj_genWstar_mass
+#  - fj_mindR_HWW_daus
+#  - fj_maxdR_HWW_daus
+#  - fj_maxdR_Hbb_daus
+#  - fj_genW_decay
+#  - fj_genWstar_decay
+#  - fj_evt_met_covxx
+#  - fj_evt_met_covxy
+#  - fj_evt_met_covyy
+#  - fj_evt_met_dphi
+#  - fj_evt_met_pt
+#  - fj_evt_met_sig
+#  - fj_evt_pupmet_pt
+#  - fj_evt_pupmet_dphi
+ - pfcand_pt_log_nopuppi
+ - pfcand_e_log_nopuppi
+ - pfcand_etarel
+ - pfcand_phirel
+ - pfcand_abseta
+ - pfcand_charge
+ - pfcand_isMu
+ - pfcand_isEl
+ - pfcand_isChargedHad
+ - pfcand_isGamma
+ - pfcand_isNeutralHad
+ - pfcand_VTX_ass
+ - pfcand_lostInnerHits
+ - pfcand_normchi2
+ - pfcand_quality
+ - pfcand_dz
+ - pfcand_dzsig
+ - pfcand_dxy
+ - pfcand_dxysig
+#  - fj_msoftdrop
+ - sv_pt_log
+ - sv_etarel
+ - sv_phirel
+ - sv_abseta
+ - sv_ntracks
+ - sv_normchi2
+ - sv_dxy
+ - sv_dxysig
+ - sv_d3d
+ - sv_d3dsig
+ - sv_costhetasvpv
+
+# spectators classifications, new data is not classified for us
+spectators: 
+#  - fj_isQCDb
+ - fj_isQCDbb
+#  - fj_isQCDc
+ - fj_isQCDcc
+#  - fj_isQCDlep
+ - fj_isQCDothers
+#  - fj_isTop
+#  - fj_isToplep
+#  - fj_isW
+#  - fj_isWlep
+#  - fj_isZ
+ - fj_H_bb
+ - fj_H_cc
+ - fj_H_qq
+#  - fj_H_WW_4q
+#  - fj_H_WW_elenuqq
+#  - fj_H_WW_munuqq
+#  - fj_H_WW_taunuqq
+#  - fj_H_tt_elenuhad
+#  - fj_H_tt_munuhad
+#  - fj_H_tt_hadhad
+
+# 2 labels: mass we will br predicting
+labels:
+# - sv_mass
+# - fj_genRes_mass
+ - fj_genjetmsd
+# - fj_genjetmass
+#  - fj_mass
+
+nfeatures: 30
+nspectators: 6
+nlabels: 1
+
+# we're going to zero-pad up to 60 tracks
+ntracks: 100

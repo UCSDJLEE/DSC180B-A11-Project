@@ -7,7 +7,7 @@ import random
 # Data loader script for EDA portion of DSC180B project
 # Author: Jayden Lee
 
-#------------------------------------------------------------------------ral
+# ------------------------------------------------------------------------ral
 
 # In our case, our dataset is splitted into two parts based on 
 # the type of jet: QCD and Hbb(and other type of Higgs jets)
@@ -16,7 +16,7 @@ import random
 
 # Within each type, test sets for them also exist in separate directory
 
-#------------------------------------------------------------------------
+# ------------------------------------------------------------------------
 
 # Global variables
 EVENTS = 'Events'
@@ -90,8 +90,9 @@ def path_generator(t:str, eda=True) -> list:
                 low, high = bound
                 fp = main.format(low=low, high=high)
                 temp = os.listdir(fp)
+                all_files = [file for file in temp if not file.startswith('.')]
 
-                files = [os.path.join(fp,file) for file in temp]
+                files = [os.path.join(fp,file) for file in all_files]
                 lst += files
 
         elif t.upper() == signal:
@@ -102,6 +103,7 @@ def path_generator(t:str, eda=True) -> list:
             for part in parts:
                 fp = main.format(part)
                 temp = os.listdir(fp)
+                all_files = [file for file in temp if not file.startswith('.')]
 
                 files = [os.path.join(fp,file) for file in temp]
                 lst += files

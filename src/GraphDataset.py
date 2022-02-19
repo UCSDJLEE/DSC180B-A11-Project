@@ -6,11 +6,8 @@ import numpy as np
 import pandas as pd
 import uproot
 import glob
-import multiprocessing
-from pathlib import Path
 import yaml
 from tqdm.notebook import tqdm
-import awkward as ak
 from utils import get_file_handler
 
 
@@ -22,7 +19,7 @@ class GraphDataset(Dataset):
         Args:
             root (str): path
             n_events (int): how many events to process (-1=all)
-            n_events_merge (int): how many events to merge
+            n_events_merg}e (int): how many events to merge
             file_names (list of strings): file names
             remove_unlabeled (boolean): remove unlabeled data samples
         """
@@ -33,7 +30,7 @@ class GraphDataset(Dataset):
         self.n_events_merge = n_events_merge
         self.file_names = file_names
         self.remove_unlabeled = remove_unlabeled
-        super(GraphDataset, self).__init__(root, transform, pre_transform)
+        super().__init__(root, transform, pre_transform)
 
     @property
     def raw_file_names(self):
@@ -76,7 +73,7 @@ class GraphDataset(Dataset):
 
                 feature_array = tree.arrays(self.features,
                                             entry_stop=self.n_events,
-                                            library='ak')
+                                            library='np')
 
                 label_array_all = tree.arrays(self.labels,
                                               entry_stop=self.n_events,
@@ -109,7 +106,19 @@ class GraphDataset(Dataset):
                 pairs = np.stack([[m, n] for (m, n) in itertools.product(range(n_particles), range(n_particles)) if m != n])
                 edge_index = torch.tensor(pairs, dtype=torch.long)
                 edge_index = edge_index.t().contiguous()
-                x = torch.tensor([feature_array[feat][i].to_numpy() for feat in self.features], dtype=torch.float).T
+#                 print(feature_array['sv_pt_log'][i].to_numpy())
+                x = []
+                for feat in self.features:
+                    if feat.startswith('pf'):
+                        x.append(feature_array[feat][i])
+                    # Zero-pad sv features to have 100 entries
+                    # to match dimension with pf features
+                    elif feat.startswith('sv'):
+                        t = feature_array[feat][i]
+                        padded100 = np.pad(t, (0,93), constant_values=0)
+                        x.append(padded100)
+                x = torch.tensor(x, dtype=torch.float).T
+#                 x = torch.tensor([feature_array[feat][i].to_numpy() for feat in self.features], dtype=torch.float).T
                 u = torch.tensor(z[i], dtype=torch.float)
                 data = Data(x=x, edge_index=edge_index, y=torch.tensor(y[i:i+1], dtype=torch.long))
                 data.u = torch.unsqueeze(u, 0)

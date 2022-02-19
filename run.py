@@ -96,7 +96,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                 net.load_state_dict(torch.load('simplenetwork_best.pt'))
 
             # Training with training set
-            training_loss = []
+            training_temp = []
             valid_temp = []
             net.train()
             for i, data in p:
@@ -104,14 +104,14 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                 y = data.y
                 prediction = net(data.x, data.batch) 
                 loss = loss_func(prediction.float(), y.float())
-                training_loss.append(loss.item())
+                training_temp.append(loss.item())
                 
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step() 
             
-            training_batch_loss = np.average(temp)
-            training_lst.append(batch_loss)
+            training_batch_loss = np.average(training_temp)
+            training_lst.append(training_batch_loss)
             
             # Evaluating with validation set
             net.eval(); 
@@ -128,7 +128,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             
             if batch_vloss < best_vloss:
                 best_vloss = batch_vloss
-                modpath = os.path.join('../conf/', 'simplenetwork_best.pt')
+                modpath = os.path.join('simplenetwork_best.pt')
                 print('New best model saved to:',modpath)
                 torch.save(net.state_dict(),modpath)
             
@@ -142,6 +142,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         training_rmse = [np.sqrt(tloss) for tloss in training_lst]
         validation_rmse = [np.sqrt(vloss) for vloss in valid_lst]
 
+        # Refresh all .pt files
         return training_rmse, validation_rmse
 
 if __name__ == '__main__':

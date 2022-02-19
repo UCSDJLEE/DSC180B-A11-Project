@@ -21,6 +21,7 @@ import yaml
 sys.path.insert(0, './src')
 from load_data import path_generator
 from GraphDataset import GraphDataset
+from model import Net
 
 ROOT = "/home/h8lee/DSC180B-A11-Project"
 CONFIG = 'conf/reg_defs.yml'

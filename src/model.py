@@ -2,7 +2,6 @@
 
 from torch.nn import Sequential as Seq, Linear as Lin, ReLU, BatchNorm1d, Flatten, Module
 from torch_scatter import scatter_mean
-from tdqm import tqdm
 
 class Net(Module):
 

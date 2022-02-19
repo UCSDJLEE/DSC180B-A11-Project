@@ -128,6 +128,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             
             if batch_vloss < best_vloss:
                 best_vloss = batch_vloss
+                best_epoch = epoch
                 modpath = os.path.join('simplenetwork_best.pt')
                 print('New best model saved to:',modpath)
                 torch.save(net.state_dict(),modpath)
@@ -145,7 +146,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         # Refresh all .pt files by deleting `processed` dir
         # os.rmdir('./processed');
 
-        return training_rmse, validation_rmse
+        return training_rmse, validation_rmse, best_epoch
 
 if __name__ == '__main__':
     targets = sys.argv[1:]

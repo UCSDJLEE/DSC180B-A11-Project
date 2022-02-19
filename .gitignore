@@ -7,3 +7,5 @@ src/__pycache__/
 .ipynb_checkpoints/
 
 src/.ipynb_checkpoints/
+
+./processed/

@@ -9,7 +9,7 @@ from torch.nn import Sequential as Seq, Linear as Lin, ReLU, BatchNorm1d, Flatte
 from torch_scatter import scatter_mean
 from torch.utils.data import random_split
 from torch_geometric.data import DataListLoader, Batch
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 import numpy as np
 import os
 import sys
@@ -22,8 +22,8 @@ sys.path.insert(0, './src')
 from load_data import path_generator
 from GraphDataset import GraphDataset
 
-ROOT = "/home/h8lee/DSC180B-A11-Project/src"
-CONFIG = '../conf/reg_defs.yml'
+ROOT = "/home/h8lee/DSC180B-A11-Project"
+CONFIG = 'conf/reg_defs.yml'
 
 def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100):   
 
@@ -127,7 +127,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             
             if batch_vloss < best_vloss:
                 best_vloss = batch_vloss
-                modpath = os.path.join('simplenetwork_best.pt')
+                modpath = os.path.join('../conf/', 'simplenetwork_best.pt')
                 print('New best model saved to:',modpath)
                 torch.save(net.state_dict(),modpath)
             

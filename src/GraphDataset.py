@@ -7,7 +7,7 @@ import pandas as pd
 import uproot
 import glob
 import yaml
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from utils import get_file_handler
 
 

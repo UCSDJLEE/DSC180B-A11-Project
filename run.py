@@ -42,8 +42,9 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         nfeatures = definitions['nfeatures']
         nlabels = definitions['nlabels']
 
-        train_files = (random.sample(path_generator('signal', eda=False), 6) + 
-                           random.sample(path_generator('qcd', eda=False), 6))
+        train_files = (random.sample(path_generator('signal', eda=False), 20) + 
+                           random.sample(path_generator('qcd', eda=False), 20))
+        random.shuffle(train_files);
         dir_path = '/home/h8lee/DSC180B-A11-Project'
         graph_dataset = GraphDataset(dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
                                  file_names= train_files)
@@ -114,14 +115,15 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             training_lst.append(training_batch_loss)
             
             # Evaluating with validation set
-            net.eval(); 
-            for j, vdata in q:
-                vdata = vdata.to(device)
-                y = vdata.y
-                vpreds = net(vdata.x, vdata.batch)
-                vloss = loss_func(vpreds.float(), y.float())
-                
-                valid_temp.append(vloss.item())
+            net.eval();
+            with torch.no_grad(): 
+                for j, vdata in q:
+                    vdata = vdata.to(device)
+                    y = vdata.y
+                    vpreds = net(vdata.x, vdata.batch)
+                    vloss = loss_func(vpreds.float(), y.float())
+                    
+                    valid_temp.append(vloss.item())
                 
             batch_vloss = np.average(valid_temp)
             valid_lst.append(batch_vloss)
@@ -145,6 +147,9 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         # Refresh all .pt files by deleting `processed` dir
         # os.rmdir('./processed');
+
+        # ====================================
+        # TESTING STARTS HERE
 
         return training_rmse, validation_rmse, best_epoch
 

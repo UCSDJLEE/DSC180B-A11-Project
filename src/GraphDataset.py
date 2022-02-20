@@ -13,7 +13,7 @@ from utils import get_file_handler
 
 class GraphDataset(Dataset):
     def __init__(self, root, features, labels, spectators, transform=None, pre_transform=None,
-                 n_events=-1, n_events_merge=1000, file_names=None, remove_unlabeled=True):
+                 n_events=-1, n_events_merge=1000, file_names=None, remove_unlabeled=True, tester=False):
         """
         Initialize parameters of graph dataset
         Args:
@@ -30,7 +30,11 @@ class GraphDataset(Dataset):
         self.n_events_merge = n_events_merge
         self.file_names = file_names
         self.remove_unlabeled = remove_unlabeled
+        self.tester = tester
         super().__init__(root, transform, pre_transform)
+
+        if self.tester:
+            self.procseed_dir = '/home/h8lee/DSC180B-A11-Project/test-processed'
 
     @property
     def raw_file_names(self):

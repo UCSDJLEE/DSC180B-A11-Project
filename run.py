@@ -78,7 +78,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         net = Net().to(device) # Model initialization
         optimizer = torch.optim.Adam(net.parameters(), lr=0.02)
         valid_pred_loss = float(np.inf)
-        stopper = False # Early stopper to prevent overfitting
+        stopper = False # Early stopper to prevent overfitting; converts to True in later epoch once validation loss starts increasing
 
         if stopper_size is None:
             stopper_size = 30
@@ -142,6 +142,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                 
             print(f'At epoch {epoch}, training loss: {training_batch_loss} and validation loss: {batch_vloss}')
 
+        print('\n', f'Through model training process, the lowest recorded validation RMSE is {best_vloss}, and the lowest recorded empirical RMSE is {min(training_lst)}', '\n')
         training_rmse = [np.sqrt(tloss) for tloss in training_lst]
         validation_rmse = [np.sqrt(vloss) for vloss in valid_lst]
 

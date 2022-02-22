@@ -45,8 +45,9 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         train_files = (random.sample(path_generator('signal', eda=False), 20) + 
                            random.sample(path_generator('qcd', eda=False), 20))
         random.shuffle(train_files);
-        dir_path = '/home/h8lee/DSC180B-A11-Project'
-        graph_dataset = GraphDataset(dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
+        # Use `os` functions for this 
+        training_dir_path = '/home/h8lee/DSC180B-A11-Project/train_data'
+        graph_dataset = GraphDataset(training_dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
                                  file_names= train_files)
 
         def collate(items): return Batch.from_data_list(sum(items, []))

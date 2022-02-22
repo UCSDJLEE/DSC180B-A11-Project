@@ -19,7 +19,7 @@ import random
 import yaml
 
 sys.path.insert(0, './src')
-from load_data import path_generator
+from load_data import path_generator, random_test_path_generator
 from GraphDataset import GraphDataset
 from model import Net
 
@@ -52,7 +52,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         train_graph_dataset = GraphDataset(training_dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
                                  file_names=train_files)
 
-        print(f"Graph datasets are successfully prepared at {training_dir_path}")
+        print(f"\nGraph datasets are successfully prepared at {training_dir_path}", '\n')
 
         def collate(items): return Batch.from_data_list(sum(items, []))
 
@@ -84,6 +84,9 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         valid_pred_loss = float(np.inf)
         stopper = False # Early stopper to prevent overfitting; converts to True in later epoch once validation loss starts increasing
 
+        if os.path.exists('./simplenetwork_best.pt'):
+            stopper = True
+
         if stopper_size is None:
             stopper_size = 30
 
@@ -91,6 +94,10 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         for epoch in t:
             if stopper:
+                if os.path.exists('./simplenetwork_best.pt'):
+                    print('Using pre-trained optimized NN weights...', '\n')
+                else:
+                    print('Early stopping enforced')
                 break;
             
             p = tqdm(enumerate(train_loader), total=train_samples/batch_size, leave=bool(epoch==n_epochs-1))
@@ -136,7 +143,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                 best_vloss = batch_vloss
                 best_epoch = epoch
                 modpath = os.path.join(ROOT, 'simplenetwork_best.pt')
-                print('New best model saved to:',modpath)
+                print('New best model saved to:',modpath, '\n')
                 torch.save(net.state_dict(),modpath)
             
             if (epoch > stopper_size) & (batch_vloss > valid_pred_loss):
@@ -150,13 +157,44 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         training_rmse = [np.sqrt(tloss) for tloss in training_lst]
         validation_rmse = [np.sqrt(vloss) for vloss in valid_lst]
 
-        # Refresh all .pt files by deleting `processed` dir
-        # os.rmdir('./processed');
-
         # ====================================
         # TESTING STARTS HERE
+        print('='*50, '\n')
+        print('Testing Phase', '\n')
+        test_files = random_test_path_generator()
+        test_dir_path = os.path.join(ROOT, TEST_PATH)
+        test_graph_dataset = GraphDataset(test_dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
+                                 file_names=test_files)
 
-        return training_rmse, validation_rmse, best_epoch
+        print(f"\nGraph test datasets are successfully prepared at {test_dir_path}", '\n')
+
+        test_loader = DataListLoader(test_dataset, batch_size=batch_size, pin_memory=True, shuffle=True)
+        test_loader.collate_fn = collate
+        test_samples = len(test_dataset)
+        test_lst = []
+
+        test_p = tqdm(enumerate(test_loader), total=test_samples/batch_size)
+        test_loss = []
+        net = Net().to(device)
+
+        # Retrieve the model weights that produced smallest validation loss
+        best_weight = '/home/h8lee/DSC180B-A11-Project/simplenetwork_best.pt'
+        net.load_state_dict(torch.load(best_weight));
+
+        net.eval();
+        with torch.no_grad():
+            for k, tdata in test_p:
+                tdata = tdata.to(device) # Moving data to memory
+                y = tdata.y # Retrieving target variable
+                tpreds = net(tdata.x, tdata.batch) 
+                loss_t = (tpreds.float() - y.float()) / (y.float())
+                loss = loss_t.numpy().ravel().tolist()
+                test_lst+=loss
+
+        test_masked = np.ma.masked_invalid(test_lst).tolist()
+        test_resolution = [x for x in test_masked if x is not None]
+
+        return training_rmse, validation_rmse, best_epoch, test_resolution
 
 if __name__ == '__main__':
     targets = sys.argv[1:]

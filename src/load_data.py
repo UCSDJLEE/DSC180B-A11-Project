@@ -110,6 +110,45 @@ def path_generator(t:str, eda=True) -> list:
         
     return lst
 
+def random_test_path_generator():
+    '''
+    This function randomly generates paths to test jet datasets
+    Function will first retrieve paths too all available datasets under different signal/QCD subdirectories
+    and sample 2 QCD jet files and 3 signal jet files from them
+    '''
+    signal_parts = [1,2]
+    signal_main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/test_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{0}_TuneCP5_13TeV-madgraph_pythia8'
+    test_files = []
+
+    qcd_main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/test_mass_qcd/QCD_HT{lower}to{upper}_TuneCP5_13TeV-madgraph-pythia8'
+    bounds = [
+        [1000,1500],
+        [1500,2000],
+        [2000, 'Inf'],
+        [500,700],
+        [700,1000]
+    ]
+
+    for part in signal_parts:
+        test_signal_dir = signal_main.format(part)
+        all_files = os.listdir(test_signal_dir)
+        
+        temp = [os.path.join(test_signal_dir, file) for file in all_files if not file.startswith('.')]
+        t = random.sample(temp, 3)
+        test_files+=t
+        
+    for bound in bounds:
+        lower, upper = bound
+        test_qcd_dir = qcd_main.format(lower=lower, upper=upper)
+        all_files = os.listdir(test_qcd_dir)
+        
+        temp = [os.path.join(test_qcd_dir, file) for file in all_files if not file.startswith('.')]
+        t = random.sample(temp, 2)
+        test_files+=t
+
+    random.shuffle(test_files);
+    return test_files
+
 
 def load_jet_features(fps:list) -> pd.DataFrame:
     '''

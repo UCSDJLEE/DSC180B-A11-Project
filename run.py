@@ -25,6 +25,8 @@ from model import Net
 
 ROOT = "/home/h8lee/DSC180B-A11-Project"
 CONFIG = 'conf/reg_defs.yml'
+TRAIN_PATH = 'train_data'
+TEST_PATH = 'test_data'
 
 def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100):   
 
@@ -45,10 +47,12 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         train_files = (random.sample(path_generator('signal', eda=False), 20) + 
                            random.sample(path_generator('qcd', eda=False), 20))
         random.shuffle(train_files);
-        # Use `os` functions for this 
-        training_dir_path = '/home/h8lee/DSC180B-A11-Project/train_data'
-        graph_dataset = GraphDataset(training_dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
-                                 file_names= train_files)
+
+        training_dir_path = os.path.join(ROOT, TRAIN_PATH)
+        train_graph_dataset = GraphDataset(training_dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
+                                 file_names=train_files)
+
+        print(f"Graph datasets are successfully prepared at {training_dir_path}")
 
         def collate(items): return Batch.from_data_list(sum(items, []))
 
@@ -59,11 +63,10 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         if batch_size is None:
             batch_size = 32
         
-        full_length = len(graph_dataset)
+        full_length = len(train_graph_dataset)
         valid_num = int(valid_frac*full_length)
-        batch_size = 32
 
-        train_dataset, valid_dataset = random_split(graph_dataset, [full_length-valid_num,valid_num])
+        train_dataset, valid_dataset = random_split(train_graph_dataset, [full_length-valid_num,valid_num])
 
         train_loader = DataListLoader(train_dataset, batch_size=batch_size, pin_memory=True, shuffle=True)
         train_loader.collate_fn = collate
@@ -132,7 +135,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             if batch_vloss < best_vloss:
                 best_vloss = batch_vloss
                 best_epoch = epoch
-                modpath = os.path.join('simplenetwork_best.pt')
+                modpath = os.path.join(ROOT, 'simplenetwork_best.pt')
                 print('New best model saved to:',modpath)
                 torch.save(net.state_dict(),modpath)
             
@@ -143,7 +146,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                 
             print(f'At epoch {epoch}, training loss: {training_batch_loss} and validation loss: {batch_vloss}')
 
-        print('\n', f'Through model training process, the lowest recorded validation RMSE is {best_vloss}, and the lowest recorded empirical RMSE is {min(training_lst)}', '\n')
+        print('\n', f'Through model training process, the lowest recorded validation RMSE is {np.sqrt(best_vloss)}, and the lowest recorded empirical RMSE is {np.sqrt(min(training_lst))}', '\n')
         training_rmse = [np.sqrt(tloss) for tloss in training_lst]
         validation_rmse = [np.sqrt(vloss) for vloss in valid_lst]
 

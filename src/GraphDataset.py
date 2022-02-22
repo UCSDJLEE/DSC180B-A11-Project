@@ -33,9 +33,6 @@ class GraphDataset(Dataset):
         self.tester = tester
         super().__init__(root, transform, pre_transform)
 
-        if self.tester:
-            self.procseed_dir = '/home/h8lee/DSC180B-A11-Project/test-processed'
-
     @property
     def raw_file_names(self):
         """

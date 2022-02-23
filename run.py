@@ -17,6 +17,8 @@ import pandas as pd
 import numpy as np
 import random
 import yaml
+import matplotlib.pyplot as plt 
+import seaborn as sns 
 
 sys.path.insert(0, './src')
 from load_data import path_generator, random_test_path_generator
@@ -113,6 +115,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             # Training with training set
             training_temp = []
             valid_temp = []
+            best_epoch = 0
             net.train()
             for i, data in p:
                 data = data.to(device)
@@ -161,10 +164,31 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         training_rmse = [np.sqrt(tloss) for tloss in training_lst]
         validation_rmse = [np.sqrt(vloss) for vloss in valid_lst]
+        epochs = [x+1 for x in range(len(validation_rmse))]
+        fig = plt.figure(figsize=(10,10))
+        ax = fig.gca()
+        _ = sns.set(context='notebook',
+                   rc={'axes.spines.right':False,
+                      'axes.spines.top':False},
+                   style='white')
+
+        sns.lineplot(x=epoch, y=train_rmse, color='blue', ax=ax, label='Train RMSE loss')
+        sns.lineplot(x=epoch, y=valid_rmse, color='orange', ax=ax, label='Validation RMSE loss');
+        ax.plot(best_epoch+1, valid_rmse[best_epoch], marker='*', markerSize=12, color='red', label='Best model saved at');
+
+        _ = ax.legend(frameon=True)
+        _ = ax.set_xlabel('# of Epoch')
+        _ = ax.set_ylabel('RMSE')
+        _ = ax.set_title('Jet mass NN-regressor learning curve', fontdict={
+            'size':15,
+            'weight':'bold'
+        })
+
+        ax.figure.savefig('./notebooks/learning_curve.png', format='png');
 
         # ====================================
         # TESTING STARTS HERE
-        print('='*15)
+        print('\n\n', '='*25)
         print('Testing Phase', '\n')
         test_files = random_test_path_generator()
         test_dir_path = os.path.join(ROOT, TEST_PATH)
@@ -184,6 +208,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         # Retrieve the model weights that produced smallest validation loss
         net.load_state_dict(torch.load(model_path));
 
+        print(f'Making jet mass predictions on test set using weighted NN regressor', '\n')
         net.eval();
         with torch.no_grad():
             for k, tdata in test_p:
@@ -198,7 +223,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         test_masked = np.ma.masked_invalid(test_lst).tolist()
         test_resolution = [x for x in test_masked if x is not None]
 
-        return training_rmse, validation_rmse, best_epoch, test_resolution
+        return
 
 if __name__ == '__main__':
     targets = sys.argv[1:]

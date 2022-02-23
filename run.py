@@ -87,6 +87,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         stopper = False # Early stopper to prevent overfitting; converts to True in later epoch once validation loss starts increasing
 
         if os.path.exists(os.path.join(ROOT, 'simplenetwork_best.pt')):
+            model_path = os.path.join(ROOT, 'simplenetwork_best.pt')
             stopper = True
 
         if stopper_size is None:
@@ -96,9 +97,8 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         for epoch in t:
             if stopper:
-                if os.path.exists(ROOT, 'simplenetwork_best.pt'):
-                    path = os.path.join(ROOT, 'simplenetwork_best.pt')
-                    print(f'Using pre-trained optimized NN weights stored in {path}', '\n')
+                if os.path.exists(model_path):
+                    print(f'Using pre-trained optimized NN weights stored in {model_path}', '\n')
                 else:
                     print('Early stopping enforced')
                 break;

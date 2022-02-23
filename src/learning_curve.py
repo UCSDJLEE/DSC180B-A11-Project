@@ -12,7 +12,7 @@ def learning_curve(training_rmse, validation_rmse, best_epoch):
 	validation_rmse: list of validation RMSE loss values
 	best_epoch: # of epoch at which the smallest loss is recorded
 	'''
-	epoch = [x+1 for x in range(len(valid_rmse))]
+	epoch = [x+1 for x in range(len(validation_rmse))]
 	_ = sns.set(
 		context='notebook', rc={
 		'axes.spines.right':False,

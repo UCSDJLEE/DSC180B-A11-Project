@@ -97,7 +97,8 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         for epoch in t:
             if stopper:
                 if os.path.exists(ROOT, 'simplenetwork_best.pt'):
-                    print(f'Using pre-trained optimized NN weights stored in {os.path.join(ROOT, 'simplenetwork_best.pt')}', '\n')
+                    path = os.path.join(ROOT, 'simplenetwork_best.pt')
+                    print(f'Using pre-trained optimized NN weights stored in {path}', '\n')
                 else:
                     print('Early stopping enforced')
                 break;

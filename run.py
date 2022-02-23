@@ -76,6 +76,8 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         train_samples = len(train_dataset)
         valid_samples = len(valid_dataset)
 
+        print(f'Train and validation data are prepared... Going into model training now', '\n')
+
         training_lst = []
         valid_lst = []
         best_vloss = float(np.inf)
@@ -84,7 +86,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         valid_pred_loss = float(np.inf)
         stopper = False # Early stopper to prevent overfitting; converts to True in later epoch once validation loss starts increasing
 
-        if os.path.exists('./simplenetwork_best.pt'):
+        if os.path.exists(os.path.join(ROOT, 'simplenetwork_best.pt')):
             stopper = True
 
         if stopper_size is None:
@@ -94,8 +96,8 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         for epoch in t:
             if stopper:
-                if os.path.exists('./simplenetwork_best.pt'):
-                    print('Using pre-trained optimized NN weights...', '\n')
+                if os.path.exists(ROOT, 'simplenetwork_best.pt'):
+                    print(f'Using pre-trained optimized NN weights stored in {os.path.join(ROOT, 'simplenetwork_best.pt')}', '\n')
                 else:
                     print('Early stopping enforced')
                 break;
@@ -153,13 +155,15 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                 
             print(f'At epoch {epoch}, training loss: {training_batch_loss} and validation loss: {batch_vloss}')
 
-        print('\n', f'Through model training process, the lowest recorded validation RMSE is {np.sqrt(best_vloss)}, and the lowest recorded empirical RMSE is {np.sqrt(min(training_lst))}', '\n')
+        if training_lst:
+            print('\n', f'Through model training process, the lowest recorded validation RMSE is {np.sqrt(best_vloss)}, and the lowest recorded empirical RMSE is {np.sqrt(min(training_lst))}', '\n')
+        
         training_rmse = [np.sqrt(tloss) for tloss in training_lst]
         validation_rmse = [np.sqrt(vloss) for vloss in valid_lst]
 
         # ====================================
         # TESTING STARTS HERE
-        print('='*50, '\n')
+        print('='*15)
         print('Testing Phase', '\n')
         test_files = random_test_path_generator()
         test_dir_path = os.path.join(ROOT, TEST_PATH)
@@ -168,13 +172,12 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         print(f"\nGraph test datasets are successfully prepared at {test_dir_path}", '\n')
 
-        test_loader = DataListLoader(test_dataset, batch_size=batch_size, pin_memory=True, shuffle=True)
+        test_loader = DataListLoader(test_graph_dataset, batch_size=batch_size, pin_memory=True, shuffle=True)
         test_loader.collate_fn = collate
-        test_samples = len(test_dataset)
-        test_lst = []
+        test_samples = len(test_graph_dataset)
 
         test_p = tqdm(enumerate(test_loader), total=test_samples/batch_size)
-        test_loss = []
+        test_lst = []
         net = Net().to(device)
 
         # Retrieve the model weights that produced smallest validation loss

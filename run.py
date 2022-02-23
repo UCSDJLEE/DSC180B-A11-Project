@@ -23,6 +23,7 @@ import seaborn as sns
 sys.path.insert(0, './src')
 from load_data import path_generator, random_test_path_generator
 from GraphDataset import GraphDataset
+from learning_curve import learning_curve
 from model import Net
 
 ROOT = "/home/h8lee/DSC180B-A11-Project"
@@ -46,15 +47,54 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         nfeatures = definitions['nfeatures']
         nlabels = definitions['nlabels']
 
-        train_files = (random.sample(path_generator('signal', eda=False), 20) + 
-                           random.sample(path_generator('qcd', eda=False), 20))
-        random.shuffle(train_files);
+        train_files = ['/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-40_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_79_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_225_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part2_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_139_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2-39_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_6_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_208_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-88_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-151_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-163_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_136_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-146_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2-23_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_16_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2-101_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-100_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-79_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_221_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-141_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_35_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_420_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part2_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_112_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part2_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_107_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-89_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_22_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-107_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-116_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_249_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2-21_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_187_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-10_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-32_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_41_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_58_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-5_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_3-8_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-184_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-127_Skim.root']
 
         training_dir_path = os.path.join(ROOT, TRAIN_PATH)
+        if os.path.exists(training_dir_path):
+            print(f'Training data are processed and ready to be employed')
+        else:
+            print('Generating graph datasets for training...', '\n')
         train_graph_dataset = GraphDataset(training_dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
                                  file_names=train_files)
-
-        print(f"\nGraph datasets are successfully prepared at {training_dir_path}", '\n')
+            print(f"\nGraph datasets are successfully prepared at {training_dir_path}", '\n')
 
         def collate(items): return Batch.from_data_list(sum(items, []))
 
@@ -88,10 +128,6 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         valid_pred_loss = float(np.inf)
         stopper = False # Early stopper to prevent overfitting; converts to True in later epoch once validation loss starts increasing
 
-        if os.path.exists(os.path.join(ROOT, 'simplenetwork_best.pt')):
-            model_path = os.path.join(ROOT, 'simplenetwork_best.pt')
-            stopper = True
-
         if stopper_size is None:
             stopper_size = 30
 
@@ -99,10 +135,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         for epoch in t:
             if stopper:
-                if os.path.exists(model_path):
-                    print(f'Using pre-trained optimized NN weights stored in {model_path}', '\n')
-                else:
-                    print('Early stopping enforced')
+                print('Early stopping enforced')
                 break;
             
             p = tqdm(enumerate(train_loader), total=train_samples/batch_size, leave=bool(epoch==n_epochs-1))
@@ -164,25 +197,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         training_rmse = [np.sqrt(tloss) for tloss in training_lst]
         validation_rmse = [np.sqrt(vloss) for vloss in valid_lst]
-        epochs = [x+1 for x in range(len(validation_rmse))]
-        fig = plt.figure(figsize=(10,10))
-        ax = fig.gca()
-        _ = sns.set(context='notebook',
-                   rc={'axes.spines.right':False,
-                      'axes.spines.top':False},
-                   style='white')
-
-        sns.lineplot(x=epochs, y=training_rmse, color='blue', ax=ax, label='Train RMSE loss')
-        sns.lineplot(x=epochs, y=validation_rmse, color='orange', ax=ax, label='Validation RMSE loss');
-        ax.plot(best_epoch+1, valid_rmse[best_epoch], marker='*', markerSize=12, color='red', label='Best model saved at');
-
-        _ = ax.legend(frameon=True)
-        _ = ax.set_xlabel('# of Epoch')
-        _ = ax.set_ylabel('RMSE')
-        _ = ax.set_title('Jet mass NN-regressor learning curve', fontdict={
-            'size':15,
-            'weight':'bold'
-        })
+        ax = learning_curve(training_rmse, validation_rmse, best_epoch)
 
         ax.figure.savefig('./notebooks/learning_curve.png', format='png');
 

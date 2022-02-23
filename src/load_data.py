@@ -105,7 +105,7 @@ def path_generator(t:str, eda=True) -> list:
                 temp = os.listdir(fp)
                 all_files = [file for file in temp if not file.startswith('.')]
 
-                files = [os.path.join(fp,file) for file in temp]
+                files = [os.path.join(fp,file) for file in all_files]
                 lst += files
         
     return lst

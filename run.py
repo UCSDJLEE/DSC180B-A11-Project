@@ -182,8 +182,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         net = Net().to(device)
 
         # Retrieve the model weights that produced smallest validation loss
-        best_weight = '/home/h8lee/DSC180B-A11-Project/simplenetwork_best.pt'
-        net.load_state_dict(torch.load(best_weight));
+        net.load_state_dict(torch.load(model_path));
 
         net.eval();
         with torch.no_grad():
@@ -192,7 +191,8 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                 y = tdata.y # Retrieving target variable
                 tpreds = net(tdata.x, tdata.batch) 
                 loss_t = (tpreds.float() - y.float()) / (y.float())
-                loss = loss_t.numpy().ravel().tolist()
+                loss_t_np = loss_t.cpu().numpy()
+                loss = loss_t_np.ravel().tolist()
                 test_lst+=loss
 
         test_masked = np.ma.masked_invalid(test_lst).tolist()

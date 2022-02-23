@@ -148,7 +148,6 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             # Training with training set
             training_temp = []
             valid_temp = []
-            best_epoch = 0
             net.train()
             for i, data in p:
                 data = data.to(device)
@@ -181,6 +180,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             if batch_vloss < best_vloss:
                 best_vloss = batch_vloss
                 best_epoch = epoch
+                print(f'Best epoch; {best_epoch}')
                 modpath = os.path.join(ROOT, 'simplenetwork_best.pt')
                 print('New best model saved to:',modpath, '\n')
                 torch.save(net.state_dict(),modpath)
@@ -221,7 +221,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         net = Net().to(device)
 
         # Retrieve the model weights that produced smallest validation loss
-        net.load_state_dict(torch.load(model_path));
+        net.load_state_dict(torch.load(modpath));
 
         print(f'Making jet mass predictions on test set using weighted NN regressor', '\n')
         net.eval();

@@ -172,8 +172,8 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                       'axes.spines.top':False},
                    style='white')
 
-        sns.lineplot(x=epoch, y=train_rmse, color='blue', ax=ax, label='Train RMSE loss')
-        sns.lineplot(x=epoch, y=valid_rmse, color='orange', ax=ax, label='Validation RMSE loss');
+        sns.lineplot(x=epochs, y=training_rmse, color='blue', ax=ax, label='Train RMSE loss')
+        sns.lineplot(x=epochs, y=validation_rmse, color='orange', ax=ax, label='Validation RMSE loss');
         ax.plot(best_epoch+1, valid_rmse[best_epoch], marker='*', markerSize=12, color='red', label='Best model saved at');
 
         _ = ax.legend(frameon=True)

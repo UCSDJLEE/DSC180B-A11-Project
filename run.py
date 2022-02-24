@@ -241,7 +241,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         avg_resolution = np.average(test_resolution)
         std_resolution = np.std(test_resolution)
 
-        print(f'Evaluation complete: loss centered around {avg_resolution} resolution varying {std_resolution}')
+        print(f'Evaluation complete: loss centered around {round(avg_resolution, 2)} resolution varying {round(std_resolution, 2)}')
         print('\n\n', 'run.py complete.')
 
         return

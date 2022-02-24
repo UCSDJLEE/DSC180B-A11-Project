@@ -1,15 +1,15 @@
-./.ipynb_checkpoints/
+.ipynb_checkpoints/
 
 src/__pycache__/
 
-./.DS_Store
+.DS_Store
 
 src/.ipynb_checkpoints/
 
-./test_data/
+test_data/
 
-./train_data/
+train_data/
 
-./__pycache__
+__pycache__/
 
 ./notebooks/.ipynb_checkpoints/

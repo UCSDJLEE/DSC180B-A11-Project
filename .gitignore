@@ -4,8 +4,12 @@ src/__pycache__/
 
 ./.DS_Store
 
-.ipynb_checkpoints/
-
 src/.ipynb_checkpoints/
 
-./processed/
+./test_data/
+
+./train_data/
+
+./__pycache__
+
+./notebooks/.ipynb_checkpoints/

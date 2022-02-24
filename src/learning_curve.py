@@ -24,7 +24,7 @@ def learning_curve(training_rmse, validation_rmse, best_epoch):
 
 	sns.lineplot(x=epoch, y=training_rmse, color='blue', ax=ax, label='Train RMSE loss')
 	sns.lineplot(x=epoch, y=validation_rmse, color='orange', ax=ax, label='Validation RMSE loss');
-	ax.plot(best_epoch+1, validation_rmse[best_epoch], marker='*', markersize=12, color='red', label='Best model saved at');
+	ax.plot(best_epoch+1, validation_rmse[best_epoch], marker='*', markersize=12, color='red', label=f'Best model(RMSE: {round(validation_rmse[best_epoch], 2)}) saved at');
 
 	_ = ax.legend(frameon=True)
 	_ = ax.set_xlabel('# of Epoch')

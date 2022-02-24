@@ -94,7 +94,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             print('Generating graph datasets for training...', '\n')
         train_graph_dataset = GraphDataset(training_dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
                                  file_names=train_files)
-        print(f"\nGraph datasets are successfully prepared at {training_dir_path}", '\n')
+        print(f"\nGraph training datasets are successfully prepared at {training_dir_path}", '\n')
 
         def collate(items): return Batch.from_data_list(sum(items, []))
 
@@ -240,6 +240,9 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         avg_resolution = np.average(test_resolution)
         std_resolution = np.std(test_resolution)
+
+        print(f'Evaluation complete: loss centered around {avg_resolution} resolution varying {std_resolution}')
+        print('\n\n', 'run.py complete.')
 
         return
 

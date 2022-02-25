@@ -20,6 +20,6 @@ def pt_mass_relationship(df:pd.DataFrame):
 
     # Axis labeling
     _ = scatterplot.set_xlabels('Transverse momentum')
-    _ = scatterplot.set_ylabels('Generator-level soft drop mass')
+    _ = scatterplot.set_ylabels('Ground-truth jet mass')
 
     return scatterplot

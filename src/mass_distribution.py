@@ -31,7 +31,7 @@ Average mass of QCD jets: {avg_mass_qcd:.5}'
 
     # Plot configuration
     _ = ax.set_title('Distribution of jet mass by jet type', fontdict={'size':15, 'weight':'bold'})
-    _ = ax.set_xlabel('Generator-level soft drop mass')
+    _ = ax.set_xlabel('Ground-truth jet mass')
     _ = ax.text(550, 300000, text)
     _ = ax.set_xticks(range(0, 1250, 125))
     _ = ax.set_ylabel('Count of jets')

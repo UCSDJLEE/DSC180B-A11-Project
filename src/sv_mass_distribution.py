@@ -16,7 +16,7 @@ def sv_mass_distribution(df):
     assert list(df.columns) == ['# of SVs recorded', 'generator-level soft drop mass']
     XAXIS = 'Number of secondary vertices recorded'
     TITLE = 'Distribution of jet mass per jet\nwith different number of recorded SVs in a jet'
-    YAXIS = 'Generator-level soft drop mass'
+    YAXIS = 'Ground-truth jet mass'
     font_style = {
         'size':20,
         'weight':'bold',

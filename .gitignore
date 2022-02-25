@@ -12,4 +12,4 @@ train_data/
 
 __pycache__/
 
-./notebooks/.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/

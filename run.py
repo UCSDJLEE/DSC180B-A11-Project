@@ -89,12 +89,12 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         training_dir_path = os.path.join(ROOT, TRAIN_PATH)
         if os.path.exists(training_dir_path):
-            print(f'Training data are processed and ready to be employed')
+            print(f'Training data are processed and ready to be employed', '\n')
         else:
             print('Generating graph datasets for training...', '\n')
+        
         train_graph_dataset = GraphDataset(training_dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
                                  file_names=train_files)
-        print(f"\nGraph training datasets are successfully prepared at {training_dir_path}", '\n')
 
         def collate(items): return Batch.from_data_list(sum(items, []))
 
@@ -118,7 +118,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         train_samples = len(train_dataset)
         valid_samples = len(valid_dataset)
 
-        print(f'Train and validation data are prepared... Going into model training now', '\n')
+        print('\n', f'Train and validation data are prepared... Going into model training now', '\n')
 
         training_lst = []
         valid_lst = []
@@ -180,7 +180,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
             if batch_vloss < best_vloss:
                 best_vloss = batch_vloss
                 best_epoch = epoch
-                print(f'Best epoch; {best_epoch}')
+                print('\n', f'Best epoch: {best_epoch}')
                 modpath = os.path.join(ROOT, 'simplenetwork_best.pt')
                 print('New best model saved to:',modpath, '\n')
                 torch.save(net.state_dict(),modpath)
@@ -223,7 +223,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         # Retrieve the model weights that produced smallest validation loss
         net.load_state_dict(torch.load(modpath));
 
-        print(f'Making jet mass predictions on test set using weighted NN regressor', '\n')
+        print('\n', f'Making jet mass predictions on test set using weighted NN regressor', '\n')
         net.eval();
         with torch.no_grad():
             for k, tdata in test_p:
@@ -241,7 +241,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         avg_resolution = np.average(test_resolution)
         std_resolution = np.std(test_resolution)
 
-        print(f'Evaluation complete: loss centered around {round(avg_resolution, 2)} resolution varying {round(std_resolution, 2)}')
+        print(f'Evaluation complete: resolution centered around {round(avg_resolution, 2)}, varying at {round(std_resolution, 2)}...')
         print('\n\n', 'run.py complete.')
 
         return

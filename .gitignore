@@ -13,3 +13,7 @@ train_data/
 __pycache__/
 
 notebooks/.ipynb_checkpoints/
+
+data/.DS_Store
+
+src/.DS_Store

@@ -242,7 +242,8 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         std_resolution = np.std(test_resolution)
 
         print(f'Evaluation complete: resolution centered around {round(avg_resolution, 2)}, varying at {round(std_resolution, 2)}...')
-        print('\n\n'+'Project demonstration complete.')
+        print('\n\n'+'Project demonstration complete.'+'\n\n')
+        print('We encourage you to check out our demonstrations under `notebooks` folder in current repo!', '\n')
 
         return
 

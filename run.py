@@ -31,23 +31,24 @@ ROOT = "/home/h8lee/DSC180B-A11-Project"
 CONFIG = 'conf/reg_defs.yml'
 TRAIN_PATH = 'train_data'
 TEST_PATH = 'test_data'
+device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+with open(os.path.join(ROOT, CONFIG)) as file:
+    # The FullLoader parameter handles the conversion from YAML
+    # scalar values to Python the dictionary format
+    definitions = yaml.load(file, Loader=yaml.FullLoader)
+
+features = definitions['features']
+spectators = definitions['spectators']
+labels = definitions['labels']
+
+nfeatures = definitions['nfeatures']
+nlabels = definitions['nlabels']
+
 
 def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100):   
 
     if 'train' in args:
-        device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        with open(os.path.join(ROOT, CONFIG)) as file:
-            # The FullLoader parameter handles the conversion from YAML
-            # scalar values to Python the dictionary format
-            definitions = yaml.load(file, Loader=yaml.FullLoader)
-            
-        features = definitions['features']
-        spectators = definitions['spectators']
-        labels = definitions['labels']
-
-        nfeatures = definitions['nfeatures']
-        nlabels = definitions['nlabels']
-
         train_files = path_generator('both', eda=False)
 
         training_dir_path = os.path.join(ROOT, TRAIN_PATH)

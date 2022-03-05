@@ -74,39 +74,50 @@ def path_generator(t:str, eda=True) -> list:
                 files = [os.path.join(fp, sample) for sample in samples]
                 lst += files
 
-    # We will use all available training data for training our model
+    # We will use certain training data for training our model; mix of both jet types -- QCD and Signal for generalizability
+    # Pre-determined sets of training data that resulted in the best performance of implemented model
     else:
-        if t.upper() == qcd:
-            main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT{low}to{high}_TuneCP5_13TeV-madgraph-pythia8/'
-            bounds = [
-                [1000,1500],
-                [1500,2000],
-                [2000, 'Inf'],
-                [500,700],
-                [700,1000]
-            ]
-
-            for bound in bounds:
-                low, high = bound
-                fp = main.format(low=low, high=high)
-                temp = os.listdir(fp)
-                all_files = [file for file in temp if not file.startswith('.')]
-
-                files = [os.path.join(fp,file) for file in all_files]
-                lst += files
-
-        elif t.upper() == signal:
-            main = '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part{}_TuneCP5_13TeV-madgraph_pythia8/'
-
-            parts = [1,2]
-
-            for part in parts:
-                fp = main.format(part)
-                temp = os.listdir(fp)
-                all_files = [file for file in temp if not file.startswith('.')]
-
-                files = [os.path.join(fp,file) for file in all_files]
-                lst += files
+        lst += [
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-40_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_79_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_225_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part2_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_139_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2-39_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_6_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_208_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-88_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-151_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-163_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_136_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-146_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2-23_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_16_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2-101_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-100_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-79_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_221_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-141_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_35_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_420_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part2_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_112_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part2_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_107_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-89_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_22_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-107_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_1-116_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_249_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_2-21_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_187_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-10_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-32_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_41_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_hbb/BulkGravitonToHHTo4Q_MX-600to6000_MH-15to250_part1_TuneCP5_13TeV-madgraph_pythia8/nano_mc2017_58_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-5_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_3-8_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_2-184_Skim.root',
+        '/home/h8lee/teams/DSC180A_FA21_A00/a11/train_mass_qcd/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8/nano_mc2017_1-127_Skim.root'
+        ]
         
     return lst
 

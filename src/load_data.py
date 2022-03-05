@@ -77,8 +77,7 @@ def path_generator(t:str, eda=True) -> list:
     # We will use certain training data for training our model; mix of both jet types -- QCD and Signal for generalizability
     # Pre-determined sets of training data that resulted in the best performance of implemented model
     else:
-        parent_dir = os.path.split(os.getcwd())[0]
-        path_to_paths = os.path.join(parent_dir, 'conf/training_paths.txt')
+        path_to_paths = os.path.join(os.getcwd(), 'conf/training_paths.txt')
         with open(path_to_paths, 'r') as f:
             temp = f.readlines()
 

@@ -22,6 +22,7 @@ import seaborn as sns
 
 sys.path.insert(0, './src')
 from load_data import path_generator, random_test_path_generator
+from prepare_dataloder import prepare_dataloader
 from GraphDataset import GraphDataset
 from learning_curve import learning_curve
 from model import Net
@@ -58,8 +59,6 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         train_graph_dataset = GraphDataset(training_dir_path, features, labels, spectators, n_events=1000, n_events_merge=1, 
                                  file_names=train_files)
 
-        def collate(items): return Batch.from_data_list(sum(items, []))
-
         torch.manual_seed(0)
         if valid_frac is None:
             valid_frac = 0.20
@@ -72,10 +71,8 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         train_dataset, valid_dataset = random_split(train_graph_dataset, [full_length-valid_num,valid_num])
 
-        train_loader = DataListLoader(train_dataset, batch_size=batch_size, pin_memory=True, shuffle=True)
-        train_loader.collate_fn = collate
-        valid_loader = DataListLoader(valid_dataset, batch_size=batch_size, pin_memory=True, shuffle=False)
-        valid_loader.collate_fn = collate
+        train_loader = prepare_dataloader(train_dataset, batch_size=batch_size)
+        valid_loader = prepare_dataloader(valid_dataset, batch_size=batch_size)
 
         train_samples = len(train_dataset)
         valid_samples = len(valid_dataset)
@@ -87,7 +84,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         best_vloss = float(np.inf)
         net = Net().to(device) # Model initialization
         optimizer = torch.optim.Adam(net.parameters(), lr=0.02)
-        valid_pred_loss = float(np.inf)
+        valid_pred_loss = float(np.inf) # Tracker for validation loss from previous epoch
         stopper = False # Early stopper to prevent overfitting; converts to True in later epoch once validation loss starts increasing
 
         if stopper_size is None:
@@ -163,7 +160,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         ax.figure.savefig('./notebooks/learning_curve.png', format='png');
 
-        print('\nModel training complete! To test run the fitted model, run `python3 run.py test` in command line')
+        print('\nModel training complete! To test run the fitted model, run `python3 run.py test` in command line\n')
 
         # ====================================
         # TESTING STARTS HERE
@@ -177,8 +174,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
 
         print(f"\nGraph test datasets are successfully prepared at {test_dir_path}", '\n')
 
-        test_loader = DataListLoader(test_graph_dataset, batch_size=batch_size, pin_memory=True, shuffle=True)
-        test_loader.collate_fn = collate
+        test_loader = prepare_dataloader(test_graph_dataset, batch_size=batch_size)
         test_samples = len(test_graph_dataset)
 
         test_p = tqdm(enumerate(test_loader), total=test_samples/batch_size)
@@ -200,7 +196,7 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                 loss = loss_t_np.ravel().tolist()
                 test_lst+=loss
 
-        test_masked = np.ma.masked_invalid(test_lst).tolist()
+        test_masked = np.ma.masked_invalid(test_lst).tolist() # Mask invalid resolution losses
         test_resolution = [x for x in test_masked if x is not None]
 
         avg_resolution = np.average(test_resolution)

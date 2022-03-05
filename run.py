@@ -32,6 +32,7 @@ CONFIG = 'conf/reg_defs.yml'
 TRAIN_PATH = 'train_data'
 TEST_PATH = 'test_data'
 device =  torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+modpath = os.path.join(ROOT, 'simplenetwork_best.pt')
 
 with open(os.path.join(ROOT, CONFIG)) as file:
     # The FullLoader parameter handles the conversion from YAML
@@ -46,7 +47,7 @@ nfeatures = definitions['nfeatures']
 nlabels = definitions['nlabels']
 
 
-def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100):   
+def main(args, batch_size=32, valid_frac=None, stopper_size=None, n_epochs=100):   
 
     if 'train' in args:
         train_files = path_generator('both', eda=False)
@@ -63,9 +64,6 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
         torch.manual_seed(0)
         if valid_frac is None:
             valid_frac = 0.20
-
-        if batch_size is None:
-            batch_size = 32
         
         full_length = len(train_graph_dataset)
         valid_num = int(valid_frac*full_length)
@@ -141,7 +139,6 @@ def main(args, batch_size=None, valid_frac=None, stopper_size=None, n_epochs=100
                 best_vloss = batch_vloss
                 best_epoch = epoch
                 print('\n', f'Best epoch: {best_epoch}')
-                modpath = os.path.join(ROOT, 'simplenetwork_best.pt')
                 print('New best model saved to:',modpath, '\n')
                 torch.save(net.state_dict(),modpath)
             

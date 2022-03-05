@@ -6,9 +6,9 @@ src/__pycache__/
 
 src/.ipynb_checkpoints/
 
-test_data/
+# test_data/
 
-train_data/
+# train_data/
 
 __pycache__/
 

@@ -22,7 +22,7 @@ import seaborn as sns
 
 sys.path.insert(0, './src')
 from load_data import path_generator, random_test_path_generator
-from prepare_dataloder import prepare_dataloader
+from prepare_dataloader import prepare_dataloader
 from GraphDataset import GraphDataset
 from learning_curve import learning_curve
 from model import Net
